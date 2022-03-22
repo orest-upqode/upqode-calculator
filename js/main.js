@@ -43,33 +43,27 @@ function rangeFuncEvents(rangeSelector, firstLabel, secondLabel, thirdLabel, fou
     });
 }
 rangeFuncEvents('range-style', 'No design needed', 'Simple yet attractive', 'Moderately stylized', 'World class');
-rangeFuncEvents('range-copywriting', 'None', '5-10', '10-25', '25-50');
 rangeFuncEvents('range-seo', 'None', '30 keywords', '80 keywords', '150 keywords');
 rangeFuncEvents('range-database', 'None', 'Basic', 'Advanced', 'Full development');
 rangeFuncEvents('range-eccomerce', 'None', 'Basic', 'Advanced', 'Enterprise');
 rangeFuncEvents('range-animation', 'None', 'Basic', 'Advanced', 'Enterprise');
 rangeFuncEvents('range-cms', 'None', 'Standart', 'Advanced', 'Enterprise');
 
-function numberFuncEvents() {
-    let numberInput = document.getElementById('input-number');
-    let plus = document.querySelector('.number-plus');
-    let minus = document.querySelector('.number-minus');
-    
-    minus.addEventListener('click', (e) => {
-        console.log(numberInput.value);
-    });
-    
-    plus.addEventListener('click', (e) => {
-        console.log(numberInput.value);
-    });
+function numberFuncEvents(numberSelectorID, isValueZero = false) {
+    let numberInput = document.getElementById(numberSelectorID);
     
     numberInput.addEventListener('input', (e) => {
         const target = e.target;
         const maxValue = +numberInput.getAttribute('max');
         const minValue = +numberInput.getAttribute('min');
 
-        if (target.value.match(/[^0-9]|^0{1}/g)) {
+        if (target.value.match(/[^0-9]|^0{1}/g) && !isValueZero) {
             target.value = target.value.replace(/./g, '');
+        } else {
+            target.value = target.value.replace(/[^0-9]|^0{2}/g, '');
+            if (target.value == '') {
+                target.value = 0;
+            }
         }
         
         if (target.value > maxValue) {
@@ -80,7 +74,8 @@ function numberFuncEvents() {
         }
     });
 }
-numberFuncEvents();
+numberFuncEvents('input-number');
+numberFuncEvents('input-copywriting', true);
 
 function nextPrevButtons() {
     const nextBtn = document.querySelector('.calculator-form__button');
@@ -133,21 +128,73 @@ function nextPrevButtons() {
         let highSum = 0;
         let lowPrice = 0;
         let highPrice = 0;
+        const LOW_INIT_PRICE = 5000;
+        const HIGH_INIR_PRICE = 7000;
 
-        function calculatePagePrice(inputId, inputWrapperTitle, pagePrice) {
+        function calculateCoeficientForRange(rangeId, rangeWrapperTitle, lowCoef, mediumCoef, highCoef) {
+            const rangeEl = document.getElementById(rangeId);
+            let lowFinalCoef = 1;
+            let highFinalCoef = 1.5;
+
+            switch (Number(rangeEl.value)) {
+                case 25:
+                    lowFinalCoef = 1;
+                    highItemPrice = 1.5;
+                    break;
+                case 50:
+                    lowFinalCoef = Number(lowCoef);
+                    highFinalCoef = Number(lowCoef) + 0.5;
+                    break;
+                case 75:
+                    lowFinalCoef = Number(mediumCoef);
+                    highFinalCoef = Number(mediumCoef) + 0.5;
+                    break;
+                case 100:
+                    lowFinalCoef = Number(highCoef);
+                    highFinalCoef = Number(highCoef) + 0.5;
+                    break;
+            }
+
+            console.log(lowFinalCoef);
+            console.log(highFinalCoef);
+
+            return [
+                `<tr class="service-row">
+                    <th class="service">${rangeWrapperTitle}</th>
+                    <td class="item">${rangeEl.nextElementSibling.children[1].innerText}</td>
+                    <td class="low">-</td>
+                    <td class="high">-</td>
+                </tr>`,
+                lowFinalCoef,
+                highFinalCoef
+            ];
+        }
+
+        function calculatePriceForNumber(inputId, inputWrapperTitle, pagePrice, startLowPrice, startHighPrice, styleLowCoefficient, styleHighCoefficient) {
             const inputEl = document.getElementById(inputId);
             let lowItemPrice = 0;
+            let lowItemPriceFowHTML = 0;
             let highItemPrice = 0;
+            let highItemPriceFowHTML = 0;
 
-            lowItemPrice += inputEl.value * pagePrice;
-            highItemPrice = lowItemPrice * 1.5;
+            if (startLowPrice && startHighPrice) {
+                lowItemPriceFowHTML += inputEl.value * pagePrice;
+                lowItemPrice += parseInt(((inputEl.value * pagePrice) + startLowPrice) * styleLowCoefficient);
+                highItemPriceFowHTML += lowItemPriceFowHTML * styleHighCoefficient;
+                highItemPrice += parseInt((highItemPriceFowHTML + startHighPrice) * styleHighCoefficient);
+            } else {
+                lowItemPrice += inputEl.value * pagePrice;
+                highItemPrice += lowItemPrice * 1.5;
+                lowItemPriceFowHTML = lowItemPrice;
+                highItemPriceFowHTML = highItemPrice;
+            }
 
             return [
                 `<tr class="service-row">
                     <th class="service">${inputWrapperTitle}</th>
                     <td class="item">${inputEl.value}</td>
-                    <td class="low">$${lowItemPrice.toLocaleString()}</td>
-                    <td class="high">$${highItemPrice.toLocaleString()}</td>
+                    <td class="low">$${lowItemPriceFowHTML.toLocaleString()}</td>
+                    <td class="high">$${highItemPriceFowHTML.toLocaleString()}</td>
                 </tr>`,
                 lowItemPrice,
                 highItemPrice
@@ -193,19 +240,19 @@ function nextPrevButtons() {
             ];
         }
 
-        const [inputPageRowHtml, lowPriceInputs, highPriceInputs] = calculatePagePrice('input-number', 'Number of pages', 20);
-        const rangeStyleRow = calculatePriceForRange('range-style', 'Style of design', 2000, 3000, 10000);
-        const rangeCopywriteRow = calculatePriceForRange('range-copywriting', 'Copywriting number of pages', 1000, 1500, 3750);
-        const rangeSeoRow = calculatePriceForRange('range-seo', 'SEO', 2000, 3000, 6000);
-        const rangeDatabaseRow = calculatePriceForRange('range-database', 'Database Integration', 2000, 4000, 10000);
-        const rangeEccomerceRow = calculatePriceForRange('range-eccomerce', 'Ecommerce Functionality', 2000, 4000, 10000);
-        const rangeAnimationRow = calculatePriceForRange('range-animation', 'Animation', 2000, 4000, 10000);
-        const [rangeCmsRowHtml, lowPriceRanges, highPriceRanges] = calculatePriceForRange('range-cms', 'CMS', 2000, 4000, 10000);
+        const [rangeStyleRowHtml, lowCoef, highCoef] = calculateCoeficientForRange('range-style', 'Style of design', 2, 3, 4);
+        const [inputNumberRowHtml, lowPricePagesNumber, highPricePagesNumber] = calculatePriceForNumber('input-number', 'Number of pages', 20, LOW_INIT_PRICE, HIGH_INIR_PRICE, lowCoef, highCoef);
+        const [inputCopywriteRowHtml, lowPriceCopywrite, highPriceCopywrite] = calculatePriceForNumber('input-copywriting', 'Copywriting number of pages', 100);
+        const rangeSeoRow = calculatePriceForRange('range-seo', 'SEO', 1000, 2000, 5000);
+        const rangeDatabaseRow = calculatePriceForRange('range-database', 'Database Integration', 1000, 2000, 5000);
+        const rangeEccomerceRow = calculatePriceForRange('range-eccomerce', 'Ecommerce Functionality', 1000, 2000, 5000);
+        const rangeAnimationRow = calculatePriceForRange('range-animation', 'Animation', 1000, 2000, 5000);
+        const [rangeCmsRowHtml, lowPriceRanges, highPriceRanges] = calculatePriceForRange('range-cms', 'CMS', 1000, 2000, 5000);
 
         htmlRowsPrice = `
-            ${inputPageRowHtml}
-            ${rangeStyleRow[0]}
-            ${rangeCopywriteRow[0]}
+            ${inputNumberRowHtml}
+            ${rangeStyleRowHtml}
+            ${inputCopywriteRowHtml}
             ${rangeSeoRow[0]}
             ${rangeDatabaseRow[0]}
             ${rangeEccomerceRow[0]}
@@ -213,11 +260,11 @@ function nextPrevButtons() {
             ${rangeCmsRowHtml}
         `;
 
-        lowPrice = (lowPriceInputs + lowPriceRanges).toLocaleString();
-        highPrice = (highPriceInputs + highPriceRanges).toLocaleString();
+        lowPrice = (lowPricePagesNumber + lowPriceCopywrite + lowPriceRanges);
+        highPrice = (highPricePagesNumber + highPriceCopywrite + highPriceRanges);
 
-        lowPriceDesc.innerHTML = `$${lowPrice}`;
-        highPriceDesc.innerHTML = `$${highPrice}`;
+        lowPriceDesc.innerHTML = `$${lowPrice.toLocaleString()}`;
+        highPriceDesc.innerHTML = `$${highPrice.toLocaleString()}`;
 
         if (table.children[0]) {
             table.children[0].innerHTML = `<tr class="top">
@@ -238,10 +285,13 @@ function nextPrevButtons() {
         const textarea = document.getElementById('calculator-textarea');
         let itemRows = document.querySelectorAll('.service-row');
         let arr = [];
+
         textarea.innerHTML = '';
+
         itemRows.forEach(item => {
             arr.push(`${item.children[0].innerText}: ${item.children[1].innerText}`);
         });
+
         arr.forEach(item => {
             textarea.innerHTML += `${item}; `; 
         });

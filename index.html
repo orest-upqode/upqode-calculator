@@ -68,34 +68,18 @@
                 </div>
                 <div class="calculator-form__item">
                     <span class="calculator-form__item-title">Copywriting number of pages</span>
-                    <div class="range-container">
-                        <div class="range-line">
-                            <div class="range-line__dots"></div>
-                            <input id="range-copywriting" class="range-input all-inputs" type="range" value="50" min="25" max="100" step="25"/>
-                            <output class="range-value">
-                                <span class="range-value__left">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16" height="16" viewBox="0 0 256 256" xml:space="preserve">
-                                        <g transform="translate(128 128) scale(0.72 0.72)">
-                                            <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(175.05000000000007 175.04999999999995) rotate(180) scale(3.89 3.89)">
-                                                <path d="M 58.33 58.799 L 15.998 16.466 c -1.059 -1.059 -1.059 -2.776 0 -3.835 L 27.834 0.794 c 1.059 -1.059 2.776 -1.059 3.835 0 l 42.333 42.333 c 1.059 1.059 1.059 2.776 0 3.835 L 62.166 58.799 C 61.107 59.858 59.39 59.858 58.33 58.799 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(245,111,94); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"></path>
-                                                <path d="M 58.33 31.201 L 15.998 73.534 c -1.059 1.059 -1.059 2.776 0 3.835 l 11.837 11.837 c 1.059 1.059 2.776 1.059 3.835 0 l 42.333 -42.333 c 1.059 -1.059 1.059 -2.776 0 -3.835 L 62.166 31.201 C 61.107 30.142 59.39 30.142 58.33 31.201 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(245,111,94); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"></path>
-                                            </g>
-                                        </g>
-                                    </svg>
-                                </span>
-                                <p>Basic</p>
-                                <span class="range-value__right">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16" height="16" viewBox="0 0 256 256" xml:space="preserve">
-                                        <g transform="translate(128 128) scale(0.72 0.72)">
-                                            <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
-                                            <path d="M 58.33 58.799 L 15.998 16.466 c -1.059 -1.059 -1.059 -2.776 0 -3.835 L 27.834 0.794 c 1.059 -1.059 2.776 -1.059 3.835 0 l 42.333 42.333 c 1.059 1.059 1.059 2.776 0 3.835 L 62.166 58.799 C 61.107 59.858 59.39 59.858 58.33 58.799 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(245,111,94); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                                            <path d="M 58.33 31.201 L 15.998 73.534 c -1.059 1.059 -1.059 2.776 0 3.835 l 11.837 11.837 c 1.059 1.059 2.776 1.059 3.835 0 l 42.333 -42.333 c 1.059 -1.059 1.059 -2.776 0 -3.835 L 62.166 31.201 C 61.107 30.142 59.39 30.142 58.33 31.201 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(245,111,94); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                                        </g>
-                                    </svg>
-                                </span>
-                            </output>
-                            <div class="range-load"></div>
-                        </div>
+                    <div class="copywriting-container">
+                        <button class="copywriting-minus" type="button" onclick="this.nextElementSibling.stepDown();">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#fff">
+                                <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 13h-12v-2h12v2z"/>
+                            </svg>
+                        </button>
+                        <input id="input-copywriting" class="copywriting-input all-inputs" type="number" min="0" max="9999" value="1">
+                        <button class="copywriting-plus" type="button" onclick="this.previousElementSibling.stepUp();">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#fff">
+                                <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 13h-5v5h-2v-5h-5v-2h5v-5h2v5h5v2z"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
                 <div class="calculator-form__item">
