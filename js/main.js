@@ -43,9 +43,6 @@ function rangeFuncEvents(rangeSelector, firstLabel, secondLabel, thirdLabel, fou
     });
 }
 rangeFuncEvents('range-style', 'No design needed', 'Simple yet attractive', 'Moderately stylized', 'World class');
-rangeFuncEvents('range-seo', 'None', '30 keywords', '80 keywords', '150 keywords');
-rangeFuncEvents('range-database', 'None', 'Basic', 'Advanced', 'Full development');
-rangeFuncEvents('range-eccomerce', 'None', 'Basic', 'Advanced', 'Enterprise');
 rangeFuncEvents('range-animation', 'None', 'Basic', 'Advanced', 'Enterprise');
 rangeFuncEvents('range-cms', 'None', 'Standart', 'Advanced', 'Enterprise');
 
@@ -76,6 +73,50 @@ function numberFuncEvents(numberSelectorID, isValueZero = false) {
 }
 numberFuncEvents('input-number');
 numberFuncEvents('input-copywriting', true);
+
+function rangeYesNoFuncEvents(rangeIdSelector) {
+    const rangeInput = document.getElementById(rangeIdSelector);
+    rangeInput.nextElementSibling.children[1].innerHTML = 'No';
+    rangeInput.nextElementSibling.nextElementSibling.style.right = `408px`;
+
+    rangeInput.addEventListener('input', (e) => {
+        const target = e.target;
+        target.nextElementSibling.style.left = `calc(${50}% - ${58}px)`;
+
+        switch (Number(target.value)) {
+            case 0:
+                target.nextElementSibling.children[1].innerHTML = 'No';
+                target.nextElementSibling.children[0].style.opacity = 0;
+                target.nextElementSibling.children[2].style.opacity = 0.7;
+                target.nextElementSibling.nextElementSibling.style.right = `358px`;
+                target.nextElementSibling.nextElementSibling.style.right = `408px`;
+                target.nextElementSibling.style.left = `calc(${0}% + ${15}px)`;
+                break;
+            case 100:
+                target.nextElementSibling.children[1].innerHTML = 'Yes';
+                target.nextElementSibling.children[0].style.opacity = 0.7;
+                target.nextElementSibling.children[2].style.opacity = 0;
+                target.nextElementSibling.nextElementSibling.style.right = `-5px`;
+                target.nextElementSibling.style.left = `calc(${100}% - ${18}px)`;
+                break;
+            default:
+                target.nextElementSibling.innerHTML = 'Loading...';
+        }
+    });
+}
+rangeYesNoFuncEvents('additional-range-crm');
+rangeYesNoFuncEvents('additional-range-newsletter');
+rangeYesNoFuncEvents('additional-range-livechat');
+rangeYesNoFuncEvents('additional-range-bookings');
+rangeYesNoFuncEvents('additional-range-googlemap');
+rangeYesNoFuncEvents('additional-range-accessibe');
+rangeYesNoFuncEvents('additional-range-search');
+rangeYesNoFuncEvents('additional-range-forum');
+rangeYesNoFuncEvents('additional-range-membership');
+rangeYesNoFuncEvents('additional-range-multilanguage');
+rangeYesNoFuncEvents('additional-range-abtesting');
+rangeYesNoFuncEvents('additional-range-sticky-navbar');
+rangeYesNoFuncEvents('additional-range-logo');
 
 function nextPrevButtons() {
     const nextBtn = document.querySelector('.calculator-form__button');
@@ -128,8 +169,9 @@ function nextPrevButtons() {
         let highSum = 0;
         let lowPrice = 0;
         let highPrice = 0;
-        const LOW_INIT_PRICE = 5000;
-        const HIGH_INIR_PRICE = 7000;
+
+        let LOW_INIT_PRICE = 5000;
+        let HIGH_INIT_PRICE = 7000;
 
         function calculateCoeficientForRange(rangeId, rangeWrapperTitle, lowCoef, mediumCoef, highCoef) {
             const rangeEl = document.getElementById(rangeId);
@@ -154,9 +196,6 @@ function nextPrevButtons() {
                     highFinalCoef = Number(highCoef) + 0.5;
                     break;
             }
-
-            console.log(lowFinalCoef);
-            console.log(highFinalCoef);
 
             return [
                 `<tr class="service-row">
@@ -185,10 +224,9 @@ function nextPrevButtons() {
             } else {
                 lowItemPrice += inputEl.value * pagePrice;
                 highItemPrice += lowItemPrice * 1.5;
-                lowItemPriceFowHTML = lowItemPrice;
-                highItemPriceFowHTML = highItemPrice;
+                lowItemPriceFowHTML = Number.parseInt(lowItemPrice);
+                highItemPriceFowHTML = Number.parseInt(highItemPrice);
             }
-
             return [
                 `<tr class="service-row">
                     <th class="service">${inputWrapperTitle}</th>
@@ -225,8 +263,8 @@ function nextPrevButtons() {
                     break;
             }
             
-            lowSum += lowItemPrice;
-            highSum += highItemPrice;
+            lowSum += Number.parseInt(lowItemPrice);
+            highSum += Number.parseInt(highItemPrice);
 
             return [
                 `<tr class="service-row">
@@ -240,12 +278,55 @@ function nextPrevButtons() {
             ];
         }
 
+        function calculatePriceForRangeYesNo(rangeId, rangeWrapperTitle, price) {
+            const rangeEl = document.getElementById(rangeId);
+            let lowItemPrice = 0;
+            let highItemPrice = 0;
+
+            switch (Number(rangeEl.value)) {
+                case 0:
+                    lowItemPrice = 0;
+                    highItemPrice = 0;
+                    break;
+                case 100:
+                    lowItemPrice = Number(price);
+                    highItemPrice = Number(price) * 1.5;
+                    break;
+            }
+            
+            LOW_INIT_PRICE += Number.parseInt(lowItemPrice);
+            HIGH_INIT_PRICE += Number.parseInt(highItemPrice);
+
+            return [
+                `<tr class="service-row">
+                    <th class="service">${rangeWrapperTitle}</th>
+                    <td class="item">${rangeEl.nextElementSibling.children[1].innerText}</td>
+                    <td class="low">$${lowItemPrice.toLocaleString()}</td>
+                    <td class="high">$${highItemPrice.toLocaleString()}</td>
+                </tr>`,
+            ];
+        }
+
         const [rangeStyleRowHtml, lowCoef, highCoef] = calculateCoeficientForRange('range-style', 'Style of design', 2, 3, 4);
-        const [inputNumberRowHtml, lowPricePagesNumber, highPricePagesNumber] = calculatePriceForNumber('input-number', 'Number of pages', 20, LOW_INIT_PRICE, HIGH_INIR_PRICE, lowCoef, highCoef);
-        const [inputCopywriteRowHtml, lowPriceCopywrite, highPriceCopywrite] = calculatePriceForNumber('input-copywriting', 'Copywriting number of pages', 100);
-        const rangeSeoRow = calculatePriceForRange('range-seo', 'SEO', 1000, 2000, 5000);
-        const rangeDatabaseRow = calculatePriceForRange('range-database', 'Database Integration', 1000, 2000, 5000);
-        const rangeEccomerceRow = calculatePriceForRange('range-eccomerce', 'Ecommerce Functionality', 1000, 2000, 5000);
+        const rangeYesNoCRMIntegration = calculatePriceForRangeYesNo('additional-range-crm', 'CRM Integration', 100);
+        const rangeYesNoNewsletterIntegration = calculatePriceForRangeYesNo('additional-range-newsletter', 'Newsletter Integration', 100);
+        const rangeYesNoLiveChatIntegration = calculatePriceForRangeYesNo('additional-range-livechat', 'LiveChat Integration', 100);
+        const rangeYesNoOnlineBookings = calculatePriceForRangeYesNo('additional-range-bookings', 'Online Bookings', 100);
+        const rangeYesNoGoogleMap = calculatePriceForRangeYesNo('additional-range-googlemap', 'Google Map Stylization', 100);
+        const rangeYesNoAccessiBeTool = calculatePriceForRangeYesNo('additional-range-accessibe', 'AccessiBe Tool', 100);
+        const rangeYesNoComplexSearch = calculatePriceForRangeYesNo('additional-range-search', 'Complex Search', 100);
+        const rangeYesNoForum = calculatePriceForRangeYesNo('additional-range-forum', 'Forum', 100);
+        const rangeYesNoMembershipPortal = calculatePriceForRangeYesNo('additional-range-membership', '3rd Party Membership Portal', 100);
+        const rangeYesNoMultilanguage = calculatePriceForRangeYesNo('additional-range-multilanguage', 'Multilanguage Functionalty', 100);
+        const rangeYesNoABTestingFunctionality = calculatePriceForRangeYesNo('additional-range-abtesting', 'A/B Testing Functionality', 100);
+        const rangeYesNoStickyNavbar = calculatePriceForRangeYesNo('additional-range-sticky-navbar', 'Sticky Navigation Bar', 100);
+        const rangeYesNoLogo = calculatePriceForRangeYesNo('additional-range-logo', 'Logo', 100);
+        const [inputNumberRowHtml, lowPricePagesNumber, highPricePagesNumber] = calculatePriceForNumber('input-number', 'Number of pages', 20, LOW_INIT_PRICE, HIGH_INIT_PRICE, lowCoef, highCoef);
+        const [inputCopywriteRowHtml, lowPriceCopywritingNumber, highPriceCopywritingNumber] = calculatePriceForNumber('input-copywriting', 'Copywriting number of pages', 100);
+        const [inputKeywordsResearchRowHtml, lowPriceKeywordsResearchNumber, highPriceKeywordsResearchNumber] = calculatePriceForNumber('input-keywords', 'KeyWords Research', 5);
+        const [inputCustomIconsRowHtml, lowPriceCustomIconsNumber, highPriceCustomIconsNumber] = calculatePriceForNumber('input-icons', 'Custom Icon', 10);
+        const [inputIllustrationRowHtml, lowPriceIllustrationNumber, highPriceIllustrationNumber] = calculatePriceForNumber('input-illustration', 'Custom Illustration', 5);
+        const [inputAnimatedIllustrationRowHtml, lowPriceAnimatedIllustrationNumber, highPriceAnimatedIllustrationNumber] = calculatePriceForNumber('input-animated-illustration', 'Animated Illustration', 25);
         const rangeAnimationRow = calculatePriceForRange('range-animation', 'Animation', 1000, 2000, 5000);
         const [rangeCmsRowHtml, lowPriceRanges, highPriceRanges] = calculatePriceForRange('range-cms', 'CMS', 1000, 2000, 5000);
 
@@ -253,15 +334,29 @@ function nextPrevButtons() {
             ${inputNumberRowHtml}
             ${rangeStyleRowHtml}
             ${inputCopywriteRowHtml}
-            ${rangeSeoRow[0]}
-            ${rangeDatabaseRow[0]}
-            ${rangeEccomerceRow[0]}
+            ${inputKeywordsResearchRowHtml}
             ${rangeAnimationRow[0]}
             ${rangeCmsRowHtml}
+            ${rangeYesNoCRMIntegration[0]}
+            ${rangeYesNoNewsletterIntegration[0]}
+            ${rangeYesNoLiveChatIntegration[0]}
+            ${rangeYesNoOnlineBookings[0]}
+            ${rangeYesNoGoogleMap[0]}
+            ${rangeYesNoAccessiBeTool[0]}
+            ${rangeYesNoComplexSearch[0]}
+            ${rangeYesNoForum[0]}
+            ${rangeYesNoMembershipPortal[0]}
+            ${rangeYesNoMultilanguage[0]}
+            ${rangeYesNoABTestingFunctionality[0]}
+            ${rangeYesNoStickyNavbar[0]}
+            ${rangeYesNoLogo[0]}
+            ${inputCustomIconsRowHtml}
+            ${inputIllustrationRowHtml}
+            ${inputAnimatedIllustrationRowHtml}
         `;
 
-        lowPrice = (lowPricePagesNumber + lowPriceCopywrite + lowPriceRanges);
-        highPrice = (highPricePagesNumber + highPriceCopywrite + highPriceRanges);
+        lowPrice = (lowPricePagesNumber + lowPriceCopywritingNumber + lowPriceKeywordsResearchNumber + lowPriceRanges + lowPriceCustomIconsNumber + lowPriceIllustrationNumber + lowPriceAnimatedIllustrationNumber);
+        highPrice = (highPricePagesNumber + highPriceCopywritingNumber + highPriceKeywordsResearchNumber + highPriceRanges + highPriceCustomIconsNumber + highPriceIllustrationNumber + highPriceAnimatedIllustrationNumber);
 
         lowPriceDesc.innerHTML = `$${lowPrice.toLocaleString()}`;
         highPriceDesc.innerHTML = `$${highPrice.toLocaleString()}`;
@@ -275,8 +370,8 @@ function nextPrevButtons() {
             ${htmlRowsPrice}
             <tr class="total">
                 <th colspan="2">Total Estimated Quote</th>
-                <td class="low">$${lowPrice}</td>
-                <td class="high">$${highPrice}</td>
+                <td class="low">$${Number.parseInt(lowPrice)}</td>
+                <td class="high">$${Number.parseInt(highPrice)}</td>
             </tr>`;
         }
     }
